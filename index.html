@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Tracker - Modalità Carriera Club</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome per le Icone -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --accent-gold: #f59e0b;
+            --accent-green: #10b981;
+            --accent-blue: #3b82f6;
+            --text-light: #f8fafc;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-bottom: 50px;
+        }
+
+        .navbar {
+            background-color: #020617;
+            border-bottom: 2px solid var(--accent-gold);
+        }
+
+        .card-custom {
+            background-color: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.7);
+        }
+
+        .nav-tabs .nav-link {
+            color: #94a3b8;
+            border: none;
+            font-weight: 600;
+        }
+
+        .nav-tabs .nav-link.active {
+            background-color: var(--accent-gold);
+            color: #0f172a;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .trophy-card {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid #334155;
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .trophy-img {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+
+        .table-dark-custom {
+            background-color: var(--card-bg);
+            color: var(--text-light);
+        }
+
+        .table-dark-custom th {
+            background-color: #0f172a;
+            color: var(--accent-gold);
+        }
+
+        .player-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-gold);
+        }
+
+        /* FUT Card Styling */
+        .fut-card {
+            width: 280px;
+            height: 420px;
+            background: linear-gradient(135deg, #eab308 0%, #ca8a04 50%, #854d0e 100%);
+            border-radius: 18px;
+            position: relative;
+            color: #1e293b;
+            padding: 20px;
+            box-shadow: 0 15px 25px rgba(0,0,0,0.6);
+            border: 3px solid #fef08a;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .fut-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .fut-card-rating {
+            font-size: 2.8rem;
+            font-weight: 900;
+            line-height: 0.9;
+        }
+
+        .fut-card-pos {
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .fut-card-img {
+            width: 160px;
+            height: 160px;
+            object-fit: cover;
+            position: absolute;
+            top: 50px;
+            right: 10px;
+            border-radius: 10px;
+            mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+        }
+
+        .fut-card-name {
+            position: absolute;
+            top: 220px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-top: 2px solid rgba(30, 41, 59, 0.2);
+            border-bottom: 2px solid rgba(30, 41, 59, 0.2);
+            padding: 4px 0;
+        }
+
+        .fut-card-stats {
+            position: absolute;
+            top: 275px;
+            left: 20px;
+            right: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px 15px;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .clickable-row {
+            cursor: pointer;
+        }
+
+        .clickable-row:hover {
+            background-color: rgba(245, 158, 11, 0.1) !important;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-warning" href="#"><i class="fa-solid fa-trophy me-2"></i>CAREER CLUB TRACKER</a>
+            <button class="btn btn-outline-warning btn-sm" onclick="exportData()"><i class="fa-solid fa-download me-1"></i> Esporta Dati</button>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <!-- Navigazione a Schede (Tabs) -->
+        <ul class="nav nav-tabs mb-4" id="careerTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" data-bs-target="#dashboard" type="button"><i class="fa-solid fa-chart-line me-2"></i>Dashboard & Trofei</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="squad-tab" data-bs-toggle="tab" data-bs-target="#squad" type="button"><i class="fa-solid fa-users me-2"></i>Rosa Giocatori</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="halloffame-tab" data-bs-toggle="tab" data-bs-target="#halloffame" type="button"><i class="fa-solid fa-crown me-2"></i>Hall of Fame (Top 10)</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="cardgenerator-tab" data-bs-toggle="tab" data-bs-target="#cardgenerator" type="button"><i class="fa-solid fa-id-card me-2"></i>Generatore Card FUT</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="careerTabsContent">
+
+            <!-- TAB 1: DASHBOARD & TROFEI -->
+            <div class="tab-pane fade show active" id="dashboard" role="tabpanel">
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <div class="card-custom p-4 d-flex justify-content-between align-items-center flex-wrap">
+                            <div>
+                                <h2 class="fw-bold text-warning mb-1" id="clubNameDisplay">Il Mio Club FC</h2>
+                                <p class="text-muted mb-0">Gestione archivio e palmarès ufficiale</p>
+                            </div>
+                            <button class="btn btn-sm btn-outline-light mt-2 mt-md-0" onclick="editClubName()"><i class="fa-solid fa-pen me-1"></i> Modifica Nome Club</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="h4 text-warning"><i class="fa-solid fa-award me-2"></i>Bacheca Trofei</h3>
+                    <button class="btn btn-warning btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#addTrophyModal"><i class="fa-solid fa-plus me-1"></i> Aggiungi Trofeo</button>
+                </div>
+
+                <div class="row g-3" id="trophiesContainer">
+                    <!-- Trofei caricati dinamicamente -->
+                </div>
+            </div>
+
+            <!-- TAB 2: ROSA GIOCATORI -->
+            <div class="tab-pane fade" id="squad" role="tabpanel">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="h4 text-warning"><i class="fa-solid fa-shirt me-2"></i>Rosa Attuale e Storica</h3>
+                    <button class="btn btn-warning btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#addPlayerModal"><i class="fa-solid
